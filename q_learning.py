@@ -5,7 +5,6 @@ author: Amine
 version: 1
 """
 
-from itertools import count
 from random import random, choice
 from time import sleep
 from math import exp
@@ -16,23 +15,23 @@ up, down, left, right = 0, 1, 2, 3
 
 actions = up, down, left, right
 
-width, height = 5, 4
+width, height = 10, 5
 
 init_pos = 0, 0
 
 state = list(init_pos)
 
-goal = 4, 3 
+goals = (9, 3),
 
-obstacles = (2, 0), (0, 3)
+obstacles = (2, 0), (0, 3), (5, 1), (5, 0), (4, 4), (4, 0),
 
-traps = (3, 2), (1, 3)
+traps = (5, 2), (1, 3), (7, 4), (4, 1), 
 
-alpha = lambda x: 2 / (1 + exp(x)) # leaning rate function
+alpha = lambda x: 0 if x >= 500 else 2 / (1 + exp(x)) # leaning rate function
 
 gamma = lambda : 1#x: 2 / (1 + exp(x)) # discount rate function
 
-nu = lambda x: random() >= 2 / (1 + exp(x/89)) # exploration exploitation trade off function (bigger == more exploitation)
+nu = lambda x: random() >= 2 / (1 + exp(x/100)) # exploration exploitation trade off function (bigger == more exploitation)
 
 
 # Initializing the enviroment
@@ -71,10 +70,11 @@ for x, y in obstacles:
 		pass
 
 # Setting the sprite of the agent
-env[init_pos[0]][init_pos[1]]["sprite"] = "A"
-# Setting the reward and the sprite the goal
-env[goal[0]][goal[1]]["reward"] = 1
-env[goal[0]][goal[1]]["sprite"] = "G"
+env[init_pos[0]][init_pos[1]]["sprite"] = "■"
+# Setting the reward and the sprite all the goals
+for x, y in goals:
+	env[x][y]["reward"] = 1
+	env[x][y]["sprite"] = "G"
 # Setting the sprite of all the obstacles
 for x, y in obstacles:
 	env[x][y]["sprite"] = "#"
@@ -102,8 +102,9 @@ def show_env():
 
 # Clear the enviroment
 def clear_env():
-	env[init_pos[0]][init_pos[1]]["sprite"] = "A"
-	env[goal[0]][goal[1]]["sprite"] = "G"
+	env[init_pos[0]][init_pos[1]]["sprite"] = "■"
+	for x, y in goals:
+		env[x][y]["sprite"] = "G"
 	for x, y in traps:
 		env[x][y]["sprite"] = "X"
 
@@ -164,7 +165,7 @@ def move():
 	# increase n
 	Qtable[state[0]][state[1]]["n"] += 1
 	# put the agent to the new state
-	env[state[0]][state[1]]["sprite"] = "A"
+	env[state[0]][state[1]]["sprite"] = "■"
 
 	return action
 
@@ -180,15 +181,13 @@ while True:
 	system('clear')
 	show_env()
 
-	
-
 	if is_state_terminal():
-		print("The Agent has finally reached a terminal state!")
+		print("Agent has ", "WON" if env[state[0]][state[1]]["reward"] > 0 else "LOST")
 		print("Starting a new episode..")
 		learning_time -= 1
 		state = list(init_pos)
 		clear_env()
-		sleep(.3)
+		sleep(.4)
 
 	system('clear')
 	show_env()
@@ -201,7 +200,7 @@ while True:
 
 	if learning_time <= 0:
 		try:
-			learning_time = int(input('How many time should the A.I learn?\nOr just press ENTER to continue!\n [in]: '))
+			learning_time = int(input('Enter how many time should the A.I learn!\nOr just press ENTER to continue!\n[in]: '))
 		except Exception:
 			pass
-		# sleep(.2)
+
