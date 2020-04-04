@@ -25,13 +25,13 @@ goals = (9, 3),
 
 obstacles = (2, 0), (0, 3), (5, 1), (5, 0), (4, 4), (4, 0),
 
-traps = (5, 2), (1, 3), (7, 4), (4, 1), 
+traps = (5, 2), (1, 3), (7, 4), (4, 1),
 
-alpha = lambda x: 0 if x >= 500 else 2 / (1 + exp(x)) # leaning rate function
+alpha = lambda x: 0 if x >= 500 else 2 / (1 + exp(x / 3)) # leaning rate function
 
 gamma = lambda : 1#x: 2 / (1 + exp(x)) # discount rate function
 
-nu = lambda x: random() >= 2 / (1 + exp(x/100)) # exploration exploitation trade off function (bigger == more exploitation)
+nu = lambda x: random() >= 2 / (1 + exp(x * 128)) # exploration exploitation trade off function (bigger == more exploitation)
 
 
 # Initializing the enviroment
@@ -70,7 +70,7 @@ for x, y in obstacles:
 		pass
 
 # Setting the sprite of the agent
-env[init_pos[0]][init_pos[1]]["sprite"] = "■"
+env[init_pos[0]][init_pos[1]]["sprite"] = "▮"
 # Setting the reward and the sprite all the goals
 for x, y in goals:
 	env[x][y]["reward"] = 1
@@ -145,7 +145,10 @@ def is_state_terminal():
 def move():
 	action = 0
 
-	n = Qtable[state[0]][state[1]]["n"]
+	n = 0.0
+	for a in env[state[0]][state[1]]["actions"]:
+		n += abs(Qtable[state[0]][state[1]][a])
+	n /= len(env[state[0]][state[1]]["actions"])
 
 	if nu(n): # take the action with the highest Q value
 		action = best_action()
