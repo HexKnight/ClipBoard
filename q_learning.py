@@ -31,7 +31,7 @@ alpha = lambda x: 0 if x >= 500 else 2 / (1 + exp(x / 3)) # leaning rate functio
 
 gamma = lambda : 1#x: 2 / (1 + exp(x)) # discount rate function
 
-nu = lambda x: random() >= 2 / (1 + exp(x * 128)) # exploration exploitation trade off function (bigger == more exploitation)
+nu = lambda x: random() >= 2 / (1 + exp(x * 500)) # exploration exploitation trade off function (bigger == more exploitation)
 
 
 # Initializing the enviroment
