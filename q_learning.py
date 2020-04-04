@@ -102,7 +102,7 @@ def show_env():
 
 # Clear the enviroment
 def clear_env():
-	env[init_pos[0]][init_pos[1]]["sprite"] = "■"
+	env[init_pos[0]][init_pos[1]]["sprite"] = "▮"
 	for x, y in goals:
 		env[x][y]["sprite"] = "G"
 	for x, y in traps:
@@ -168,7 +168,7 @@ def move():
 	# increase n
 	Qtable[state[0]][state[1]]["n"] += 1
 	# put the agent to the new state
-	env[state[0]][state[1]]["sprite"] = "■"
+	env[state[0]][state[1]]["sprite"] = "▮"
 
 	return action
 
