@@ -27,7 +27,7 @@ obstacles = (2, 0), (0, 3), (5, 1), (5, 0), (4, 4), (4, 0),
 
 traps = (5, 2), (1, 3), (7, 4), (4, 1),
 
-alpha = lambda x: 0 if x >= 500 else 2 / (1 + exp(x / 3)) # leaning rate function
+alpha = lambda x: 0 if x / 3 >= 500 else 2 / (1 + exp(x / 3)) # leaning rate function
 
 gamma = lambda : 1#x: 2 / (1 + exp(x)) # discount rate function
 
