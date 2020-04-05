@@ -129,7 +129,7 @@ def best_action():
 	for i in env[state[0]][state[1]]["actions"]:
 			if Qtable[state[0]][state[1]][i] >= action_q:
 				action = i
-				action_q = Q(state[0], state[1], i)
+				action_q = Qtable[state[0]][state[1]][i]
 	return action
 
 
