@@ -100,6 +100,7 @@ def show_env():
 			print(env[j][i]["sprite"], '|', sep='', end='')
 		print('\n+', '-+'*width, sep='')
 
+
 # Clear the enviroment
 def clear_env():
 	env[init_pos[0]][init_pos[1]]["sprite"] = "▮"
@@ -107,11 +108,6 @@ def clear_env():
 		env[x][y]["sprite"] = "G"
 	for x, y in traps:
 		env[x][y]["sprite"] = "X"
-
-
-# The functions that access the Q table and returns the Q value
-def Q(state_x, state_y, action):
-	return Qtable[state_x][state_y][action]
 
 
 # Updating the Q table with the Temporal difrenece equation
@@ -131,10 +127,11 @@ def best_action():
 	action = 0
 	action_q = 0
 	for i in env[state[0]][state[1]]["actions"]:
-			if Q(state[0], state[1], i) >= action_q:
+			if Qtable[state[0]][state[1]][i] >= action_q:
 				action = i
 				action_q = Q(state[0], state[1], i)
 	return action
+
 
 # Returns whether is the current state terminal or not
 def is_state_terminal():
@@ -186,8 +183,8 @@ while True:
 
 	if is_state_terminal():
 		print("Agent has ", "WON" if env[state[0]][state[1]]["reward"] > 0 else "LOST")
-		print("Starting a new episode..")
 		learning_time -= 1
+		print("Learning time left: ", learning_time)
 		state = list(init_pos)
 		clear_env()
 		sleep(.4)
